@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plans and Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1220;--card:#181c30;--line:#2a3050;--line2:#39406a;--tab:#2b3260;--text:#e9ecf8;--mut:#9aa3c7;--acc:#c6f432;--ink:#0f1220;--err:#f0a39b;--ok:#7fd1a0;--warn:#e8b86b;--bubble:#222846;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Manrope',system-ui,sans-serif;min-height:100vh}
+h1,h2{font-family:'Space Grotesk',system-ui,sans-serif;margin:0;font-weight:600}
+button{font:600 15px 'Manrope',sans-serif;cursor:pointer;color:var(--text)}
+input{width:100%;min-height:48px;padding:0 14px;border-radius:10px;border:1px solid var(--line2);background:var(--bg);color:var(--text);font:400 16px 'Manrope',sans-serif}
+label{font-size:14px;color:#c5cbe8}
+.wrap{max-width:1000px;margin:0 auto;padding:16px 20px 80px;display:flex;flex-direction:column;align-items:center;gap:28px;position:relative;min-height:100vh}
+.row{display:flex;gap:12px;align-items:center}
+.top{width:100%;display:flex;justify-content:space-between;align-items:center}
+.ib{width:48px;height:48px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:0;border-radius:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px}
+.btn{min-height:52px;border:0;border-radius:12px;background:var(--acc);color:var(--ink);font-weight:700;font-size:16px;padding:0 20px}
+.btn2{min-height:48px;border:1px solid var(--line2);border-radius:12px;background:transparent;padding:0 16px}
+.mut{color:var(--mut)}
+.err{color:var(--err);font-size:14px;margin:0}
+.seg{display:flex;gap:4px;padding:4px;background:#1f2440;border-radius:12px}
+.seg button{flex:1;min-height:44px;border:0;border-radius:9px;background:transparent;padding:0 18px}
+.seg .on{background:var(--tab)}
+.plans{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start;width:100%;max-width:920px}
+.plans .card{flex:1 1 340px;max-width:448px}
+.price{font:600 40px 'Space Grotesk',sans-serif}
+ul.pl{margin:0;padding:0}
+.pl li{list-style:none;position:relative;padding-left:26px;margin:0 0 14px;font-size:15px;line-height:1.35}
+.pl li::before{content:"✓";position:absolute;left:0;color:var(--acc)}
+.badge{background:#2f6fdb;color:#fff;font-size:13px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.home{width:100%;max-width:720px;min-height:calc(100vh - 140px);display:flex;flex-direction:column;gap:20px}
+.greet{flex:1;display:flex;align-items:center;padding:100px 4px 0}
+.greet h1{font-size:56px;letter-spacing:-1px;line-height:1.05}
+#msgs{flex:1;display:flex;flex-direction:column;gap:12px;padding-top:12px}
+.m{display:flex}.m.u{justify-content:flex-end}
+.m div{max-width:85%;padding:12px 16px;border-radius:14px;background:var(--bubble);line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.m.u div{background:var(--acc);color:var(--ink)}
+.comp{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:12px;position:sticky;bottom:12px}
+.up{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#222846;border-radius:12px;padding:4px 6px 4px 16px}
+.up button{min-height:44px;border:0;background:transparent;color:var(--acc)}
+#chat{border:0;background:transparent;min-height:52px;font-size:18px}
+.chip{min-height:48px;padding:0 18px;border-radius:14px;border:0;background:var(--line);font-weight:500}
+.sq{width:48px;height:48px;border-radius:14px;border:0;background:var(--line);padding:0;font-size:24px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;justify-content:center;align-items:flex-start;padding:100px 16px;z-index:30;overflow:auto}
+.ov .card{width:100%;max-width:440px}
+.drawer{position:fixed;inset:0;z-index:40;display:flex}
+.drawer .side{overflow-y:auto;width:300px;max-width:85%;background:var(--card);border-right:1px solid var(--line2);padding:24px 20px;display:flex;flex-direction:column;gap:14px}
+.drawer .shade{flex:1;background:rgba(0,0,0,.6)}
+.nav{min-height:48px;text-align:left;padding:0 14px;border:0;border-radius:10px;background:transparent;font-size:16px;font-weight:500}
+.nav.on{background:var(--line)}
+.bal{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%}
+.stats .card{padding:16px;gap:4px;border-radius:16px}.stats b{font:600 28px 'Space Grotesk',sans-serif}
+.tbl{width:100%;overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 18px}
+.tr{display:grid;grid-template-columns:1.4fr 1.6fr .7fr .9fr 1.5fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center;font-size:14px;min-width:680px}
+.tr:last-child{border-bottom:0}.th{color:var(--mut);font-weight:700;font-size:13px}
+.code{font-family:monospace;font-size:12px;color:var(--mut)}
+.codebox{padding:18px;border-radius:12px;background:var(--bg);border:1px dashed #5a638f;text-align:center;font:600 28px monospace;letter-spacing:2px;user-select:all}
+@media(max-width:560px){.greet h1{font-size:40px}.stats{grid-template-columns:1fr}}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:28px;border:0;background:var(--acc);z-index:25;display:flex;align-items:center;justify-content:center;padding:0}
+.fp{position:fixed;right:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:360px;max-width:calc(100vw - 32px);height:460px;max-height:calc(100vh - 130px);z-index:25;background:var(--card);border:1px solid var(--line2);border-radius:20px;display:flex;flex-direction:column;overflow:hidden}
+.fh{padding:12px 12px 12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.fp .ml{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.fi{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.fi input{min-height:44px}
+.chipb{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line2);background:transparent}
+.chipb.on{background:var(--acc);color:var(--ink);border-color:var(--acc)}
+.stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var S={view:'home',menu:false,mode:'login',err:'',modal:null,code:null,unlocked:false,lockErr:false,chat:[],busy:false,cid:null,fc:false,rmsg:null,short:false,q:'',f:'all',d:{}};
+var users=[],subs=[],session='';
+function ld(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var CODES=["BAL-46N7-PZGZ", "BAL-48ES-DA6E", "BAL-7DXH-3A9W", "BAL-EGX4-SDNS", "BAL-HBJN-UE86"],AMT=1855,usage=ld('pc-usage',{}),MAXU=3;
+ld('pc-used',[]).forEach(function(c){if(!usage[c])usage[c]=['legacy']});
+users=ld('pc-users',[]);subs=ld('pc-subs',[]);session=ld('pc-session','');
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function hash(s){var x=5381;for(var i=0;i<s.length;i++)x=((x<<5)+x+s.charCodeAt(i))|0;return String(x)}
+function me(){return users.filter(function(u){return u.email===session})[0]}
+function bal2(n){return '₱'+(n||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function peso(n){return '₱'+n.toLocaleString('en-PH')}
+function val(id){var e=document.getElementById(id);return e?e.value:''}
+var I={menu:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e9ecf8" stroke-width="1.8" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>',
+user:'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e9ecf8" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="9" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>',
+mic:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c5cbe8" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+up:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f1220" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'};
+function hasPlan(){var m=me();return !!m&&subs.some(function(s){return (s.email||'').toLowerCase()===m.email&&s.status==='Active'})}
+
+function authV(){var r=S.mode==='register',d=S.d;
+return '<div class="card" style="width:100%;max-width:440px;margin-top:48px"><h1 style="font-size:36px">'+(r?'Create your account':'Welcome back')+'</h1>'+
+'<div class="seg"><button class="'+(r?'':'on')+'" data-a="mode" data-v="login">Log in</button><button class="'+(r?'on':'')+'" data-a="mode" data-v="register">Register</button></div>'+
+(r?'<label for="an">Full name</label><input id="an" autocomplete="name" value="'+esc(d.an)+'">':'')+
+'<label for="ae">Email</label><input id="ae" type="email" autocomplete="email" value="'+esc(d.ae)+'">'+
+'<label for="ap">Password</label><input id="ap" type="password" autocomplete="'+(r?'new-password':'current-password')+'">'+
+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+
+'<button class="btn" data-a="auth">'+(r?'Create account':'Log in')+'</button></div>'}
+
+function hasPro(m){return !!m&&subs.some(function(s){return (s.email||'').toLowerCase()===m.email&&s.plan==='Pro'&&s.status==='Active'})}
+function getHist(){return ld('pc-hist-'+session,[])}
+function archive(){var u=S.chat.filter(function(x){return x.role==='user'})[0];if(!u)return;var h=getHist().filter(function(x){return x.id!==S.cid});h.unshift({id:S.cid||String(Date.now()),title:u.text.slice(0,32),msgs:S.chat.filter(function(x){return x.text!=='Thinking…'})});sv('pc-hist-'+session,h.slice(0,10))}
+function gHtml(){var m=me(),g=ld('pc-group',[]);if(!g.length)return '<p class="mut" style="margin:auto;text-align:center">No messages yet. Say hi to the group.</p>';return g.map(function(x){var mine=x.e===m.email;return '<div class="m '+(mine?'u':'')+'"><div'+(x.s?' style="border:1px solid var(--acc)"':'')+'>'+(mine?'':'<b style="font-size:12px;color:var(--acc);display:block;margin-bottom:2px">'+esc(x.n)+'</b>')+esc(x.x)+'<span style="display:block;font-size:11px;opacity:.65;margin-top:4px">'+new Date(x.t).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'</span></div></div>'}).join('')+(S.gbusy>0?'<div class="mut" style="font-size:13px">System is typing…</div>':'')}
+function refreshG(){var e=document.getElementById('gmsgs');if(e){e.innerHTML=gHtml();e.scrollTop=e.scrollHeight}}
+function askSystem(){var tr=ld('pc-group',[]).slice(-12).map(function(x){return x.n+': '+x.x}).join('\n');
+var prompt='You are "System", a friendly assistant that is a member of a Pro members group chat. Below are the latest messages. Reply to the person who just mentioned @System in one or two short sentences. If they greet you, greet them back by name. Reply with only your message, no name prefix.\n\n'+tr;
+S.gbusy=(S.gbusy||0)+1;refreshG();
+function post(x){var g=ld('pc-group',[]);g.push({n:'System',e:'system@system',x:x,t:Date.now(),s:1});sv('pc-group',g.slice(-200));S.gbusy--;refreshG()}
+(window.claude?window.claude.use('sample'):Promise.resolve(null)).then(function(sample){
+if(!sample){post('I can\'t reply right now.');return}
+return sample(prompt,{cache:false}).then(function(r){post((r.text||'').replace(/^System:\s*/i,'').trim()||'Hello!')})
+}).catch(function(e){post(e&&e.code==='not_granted'?'I need permission to use Claude before I can reply.':'Sorry, I can\'t reply right now.')})}
+var BOTS=['Ana','Miguel','Joy','Carlo','Bea'],WORDS=['maayo','salamat','kumusta','sige','lami','ganda','astig','ayos','bahala','talaga','hay','uy','grabe','mao','gyud','nindot','pero','tara','kain','sayaw','kanta','balita','kape','ulan','init','bukas','karon','unya','daghan','gwapo'];
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function randomReply(){var t=Math.random()<.35?2:1;for(var k=0;k<t;k++)(function(k){setTimeout(function(){var n=2+Math.floor(Math.random()*4),w=[];for(var i=0;i<n;i++)w.push(pick(WORDS));var x=w.join(' ');x=x.charAt(0).toUpperCase()+x.slice(1)+pick(['.','!','?','...']);var b=pick(BOTS),g=ld('pc-group',[]);g.push({n:b,e:b.toLowerCase()+'@members',x:x,t:Date.now()});sv('pc-group',g.slice(-200));refreshG()},900+k*1100+Math.random()*1200)})(k)}
+function groupV(){var m=me();
+if(!hasPro(m))return '<div class="card" style="width:100%;max-width:440px;margin-top:32px"><h1 style="font-size:30px">Pro Group</h1><p class="mut" style="margin:0">This group is only for members with an active Pro subscription.</p><button class="btn" data-a="view" data-v="plans">Get Pro plan</button></div>';
+var seen={},names=[];subs.forEach(function(s){var e=(s.email||'').toLowerCase();if(s.plan==='Pro'&&s.status==='Active'&&!seen[e]){seen[e]=1;var u=users.filter(function(x){return x.email===e})[0];names.push(u?u.name:s.name)}});
+return '<div class="card" style="width:100%;max-width:720px;padding:0;gap:0;overflow:hidden"><div class="fh" style="padding:16px 20px"><div><div style="font:600 22px \'Space Grotesk\'">Pro Group</div><div class="mut" style="font-size:13px;font-weight:500">'+names.length+' member'+(names.length===1?'':'s')+' · '+esc(names.join(', '))+'</div></div></div><div id="gmsgs" style="height:55vh;min-height:320px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px">'+gHtml()+'</div><div class="fi"><label for="gchat" style="position:absolute;left:-9999px">Message the group</label><input id="gchat" placeholder="Message the group · mention @System" autocomplete="off"><button class="sq" style="background:var(--acc)" data-a="gsend" aria-label="Send">'+I.up+'</button></div></div>'}
+function topV(){return '<div class="top"><button class="ib" aria-label="Open menu" data-a="menu">'+I.menu+'</button><div class="row" style="gap:0">'+(S.view==='home'?'<button class="ib" aria-label="New chat" data-a="newchat"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e9ecf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>':'')+'<button class="ib" aria-label="Profile">'+I.user+'</button></div></div>'}
+
+function msgsHtml(){return S.chat.map(function(x){return '<div class="m '+(x.role==='user'?'u':'')+'"><div>'+esc(x.text)+'</div></div>'}).join('')}
+function homeV(){var m=me(),h=new Date().getHours(),g=(h<12?'Morning':h<18?'Afternoon':'Evening')+', '+esc(m.name.trim().split(' ')[0]);
+var msgs=S.chat.map(function(x){return '<div class="m '+(x.role==='user'?'u':'')+'"><div>'+esc(x.text)+'</div></div>'}).join('');
+return '<div class="home">'+(S.chat.length?'<div id="msgs" data-live>'+msgs+'</div>':'<div class="greet"><h1>'+g+'</h1></div>')+
+'<div class="comp">'+(hasPlan()?'':'<div class="up"><span style="color:#c5cbe8;font-size:15px">Unlock more with Pro</span><button data-a="view" data-v="plans">Upgrade to Pro</button></div>')+
+'<label for="chat" style="position:absolute;left:-9999px">Chat</label><input id="chat" placeholder="Chat with Claude…" autocomplete="off">'+
+'<div class="row" style="justify-content:space-between"><div class="row" style="gap:10px"><button class="sq" aria-label="Add">+</button><button class="chip">Sonnet 5.5 <span class="mut">Medium</span></button></div>'+
+'<div class="row" style="gap:10px"><button class="sq" aria-label="Dictate">'+I.mic+'</button><button class="sq" id="send" aria-label="Send" data-a="send" style="background:var(--acc)">'+I.up+'</button></div></div></div></div>'}
+
+function plansV(){var P=['Chat on web, iOS, Android, and desktop','Generate code and visualize data','Connect Slack and Google Workspace','Extended thinking for complex work','Built-in web search','Claude Code directly in your codebase','Power through tasks with Cowork','Build and prototype with Claude Design','Higher usage limits','Access to more Claude models','Memory that carries across conversations'];
+var M=['Up to 20x more usage than Pro*','Recommended for Claude Code &amp; Cowork','Early access to advanced Claude features','Higher output limits for all tasks','Priority access at high traffic times'];
+var li=function(a){return a.map(function(x){return '<li>'+x+'</li>'}).join('')};
+return '<h1 style="font-size:48px;text-align:center;letter-spacing:-.5px">Plans that grow with you</h1><div class="seg"><button class="on">Individual</button><button class="mut">Team and Enterprise</button></div><div class="plans">'+
+'<div class="card"><div class="row" style="justify-content:space-between;align-items:flex-start"><div><h2 style="font-size:32px">Pro</h2><p class="mut" style="margin:6px 0 0">Research, code, and organize</p></div><span class="badge">Sale · Save 20%</span></div>'+
+'<div><span class="price">₱1,850</span> <span class="mut" style="font-size:14px"><s>₱2,320</s> PHP / 2 months of Pro</span></div>'+
+'<div><button class="btn" style="width:100%" data-a="buy" data-v="Pro">Get Pro plan</button><p class="mut" style="text-align:center;font-size:13px;margin:10px 0 0">Pay once · 2 months of Pro</p></div>'+
+'<div style="border-top:1px solid var(--line);padding-top:18px"><p style="margin:0 0 14px;font-weight:700">Includes:</p><ul class="pl">'+li(P)+'</ul></div></div>'+
+'<div class="card"><div><h2 style="font-size:32px">Max</h2><p class="mut" style="margin:6px 0 0">Higher limits, priority access</p></div>'+
+'<div><span class="mut" style="font-size:14px">From</span> <span class="price">₱5,800</span> <span class="mut" style="font-size:14px">PHP / month · billed monthly</span></div>'+
+'<div><button class="btn" style="width:100%" data-a="buy" data-v="Max">Get Max plan</button><p class="mut" style="text-align:center;font-size:13px;margin:10px 0 0">No commitment · Cancel anytime</p></div>'+
+'<div style="border-top:1px solid var(--line);padding-top:18px"><p style="margin:0 0 14px;font-weight:700">Everything in Pro, plus:</p><ul class="pl">'+li(M)+'</ul></div></div></div>'}
+
+function adminV(){
+if(!S.unlocked)return '<div class="card" style="width:100%;max-width:440px;margin-top:32px"><h1 style="font-size:30px">Management is locked</h1><p class="mut" style="margin:0">Enter the subscription code you received after getting a plan.</p><label for="lc">Subscription code</label><input id="lc" placeholder="PRO-XXXX-XXXX" value="'+esc(S.d.lc)+'">'+(S.lockErr?'<p class="err">That code isn\'t valid. Management stays locked.</p>':'')+'<button class="btn" data-a="unlock">Unlock management</button></div>';
+var act=subs.filter(function(s){return s.status==='Active'}),rev=act.reduce(function(a,s){return a+s.price},0),pro=subs.filter(function(s){return s.plan==='Pro'}).length;
+var chip=function(k,l){return '<button class="chipb '+(S.f===k?'on':'')+'" data-a="flt" data-v="'+k+'">'+l+'</button>'};
+return '<div class="row" style="width:100%;justify-content:space-between"><h1 style="font-size:36px">Subscription management</h1><button class="btn2" data-a="lock">Lock</button></div>'+
+'<div class="stats"><div class="card"><span class="mut" style="font-size:14px">Subscribers</span><b>'+subs.length+'</b></div><div class="card"><span class="mut" style="font-size:14px">Active</span><b style="color:var(--ok)">'+act.length+'</b></div><div class="card"><span class="mut" style="font-size:14px">Cancelled</span><b style="color:var(--warn)">'+(subs.length-act.length)+'</b></div><div class="card"><span class="mut" style="font-size:14px">Plan mix</span><b>'+pro+' Pro · '+(subs.length-pro)+' Max</b></div></div>'+
+'<div class="row" style="width:100%;flex-wrap:wrap"><div style="flex:1 1 260px"><label for="q" style="position:absolute;left:-9999px">Search</label><input id="q" placeholder="Search name, email or code" value="'+esc(S.q)+'"></div>'+chip('all','All')+chip('Active','Active')+chip('Cancelled','Cancelled')+'</div>'+
+'<div class="tbl"><div class="tr th"><div>Name</div><div>Email</div><div>Plan</div><div>Status</div><div>Date / Actions</div></div><div id="rows">'+rowsHtml()+'</div></div>'}
+function rowsHtml(){var q=(S.q||'').toLowerCase(),l=subs.filter(function(s){return (S.f==='all'||s.status===S.f)&&(!q||(s.name+' '+s.email+' '+s.code).toLowerCase().indexOf(q)>-1)});
+if(!l.length)return '<p class="mut" style="padding:24px 0;margin:0">'+(subs.length?'No subscribers match.':'No subscribers yet. Open Subscription from the menu to add one.')+'</p>';
+return l.map(function(s){return '<div class="tr"><div><b>'+esc(s.name)+'</b><div class="code">'+esc(s.code)+'</div></div><div style="word-break:break-all">'+esc(s.email)+'</div><div>'+s.plan+'</div><div style="color:'+(s.status==='Active'?'var(--ok)':'var(--warn)')+'">'+s.status+'</div><div><div class="mut" style="font-size:13px;margin-bottom:6px">'+esc(s.date)+'</div><div class="row" style="gap:8px"><button class="btn2" style="min-height:44px;font-size:13px" data-a="tog" data-v="'+s.id+'">'+(s.status==='Active'?'Cancel':'Reactivate')+'</button><button class="btn2" style="min-height:44px;font-size:13px;color:var(--err)" data-a="del" data-v="'+s.id+'">Delete</button></div></div></div>'}).join('')}
+function modalV(){var m=me(),p=S.modal;
+return '<div class="ov"><div class="card"><h2 style="font-size:28px">Subscribe to '+p+'</h2><p class="mut" style="margin:0">'+(p==='Max'?'₱5,800 PHP / month · billed monthly':'₱1,850 PHP · pay once for 2 months of Pro')+'</p><p style="margin:0;font-weight:600">Your balance: '+bal2(m.bal)+'</p><label for="sn">Full name</label><input id="sn" value="'+esc(S.d.sn!=null?S.d.sn:m.name)+'"><label for="se">Email</label><input id="se" type="email" value="'+esc(S.d.se!=null?S.d.se:m.email)+'">'+(S.err?'<p class="err">'+esc(S.err)+'</p>':'')+(S.short?'<button class="btn2" data-a="addbal">Add balance</button>':'')+'<div class="row"><button class="btn2" style="flex:1;min-height:52px" data-a="mclose">Cancel</button><button class="btn" style="flex:1" data-a="confirm">Confirm</button></div></div></div>'}
+function codeV(){return '<div class="ov"><div class="card"><h2 style="font-size:28px">You\'re subscribed</h2><p class="mut" style="margin:0">Your subscription code. Management stays locked until you enter it.</p><div class="codebox">'+esc(S.code)+'</div><button class="btn" data-a="tomgmt">Go to Management</button></div></div>'}
+function drawerV(){var m=me(),v=S.view;
+return '<div class="drawer"><div class="side"><div><div style="font:600 20px \'Space Grotesk\'">'+esc(m.name)+'</div><div class="mut" style="font-size:13px;word-break:break-all">'+esc(m.email)+'</div></div><div class="bal"><div class="mut" style="font-size:13px">Balance</div><div style="font:600 28px \'Space Grotesk\'">₱'+(m.bal||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div></div><div style="display:flex;flex-direction:column;gap:8px"><label for="rc">Verify code</label><input id="rc" placeholder="BAL-XXXX-XXXX" autocomplete="off"><button class="btn" style="min-height:48px" data-a="redeem">Verify and add balance</button>'+(S.rmsg?'<p style="margin:0;font-size:14px;color:'+(S.rmsg.ok?'var(--ok)':'var(--err)')+'">'+esc(S.rmsg.t)+'</p>':'')+'</div>'+
+'<button class="nav" data-a="newchat">+ New chat</button><button class="nav '+(v==='plans'?'on':'')+'" data-a="view" data-v="plans">Subscription</button><button class="nav '+(v==='group'?'on':'')+'" data-a="view" data-v="group">Pro Group <span class="badge" style="margin-left:6px;font-size:11px;padding:3px 8px">Pro</span></button><button class="nav '+(v==='admin'?'on':'')+'" data-a="view" data-v="admin">Management ('+subs.length+')</button><div class="mut" style="font-size:13px;font-weight:700;margin-top:4px">'+(getHist().length?'Recent chats':'')+'</div>'+getHist().slice(0,5).map(function(c){return '<button class="nav" style="min-height:44px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" data-a="openchat" data-v="'+esc(c.id)+'">'+esc(c.title)+'</button>'}).join('')+'<div style="flex:1"></div><button class="btn2" data-a="logout">Log out</button></div><div class="shade" data-a="menu"></div></div>'}
+
+function floatV(){if(!me()||S.view==='home'||S.view==='group'||S.modal||S.code)return '';
+var h='<button class="fab" data-a="fab" aria-label="'+(S.fc?'Close chat':'Open chat')+'">'+(S.fc?'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f1220" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>':'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0f1220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>')+'</button>';
+if(S.fc)h+='<div class="fp"><div class="fh"><span>Ask Claude</span><button class="ib" style="width:44px;height:44px" data-a="fab" aria-label="Close chat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e9ecf8" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div class="ml" data-live>'+(S.chat.length?msgsHtml():'<p class="mut" style="margin:auto;text-align:center;font-size:14px">Ask anything about plans or managing subscribers.</p>')+'</div><div class="fi"><label for="fchat" style="position:absolute;left:-9999px">Message</label><input id="fchat" placeholder="Message Claude…" autocomplete="off"><button class="sq" style="background:var(--acc)" data-a="fsend" aria-label="Send">'+I.up+'</button></div></div>';
+return h}
+function render(){var h='<div class="wrap">';
+if(!me())h+=authV();
+else{h+=topV();h+=S.view==='home'?homeV():S.view==='plans'?plansV():S.view==='group'?groupV():adminV();if(S.menu)h+=drawerV();if(S.modal)h+=modalV();if(S.code)h+=codeV();h+=floatV()}
+document.getElementById('app').innerHTML=h+'</div>';
+var c=S.d.keepFocus&&document.getElementById(S.d.keepFocus);if(c)c.focus();var fm=document.querySelector('.fp [data-live]');if(fm)fm.scrollTop=fm.scrollHeight;var gm=document.getElementById('gmsgs');if(gm)gm.scrollTop=gm.scrollHeight}
+
+function scrollEnd(){window.scrollTo(0,document.body.scrollHeight)}
+function sendChat(id){id=id||'chat';var inp=document.getElementById(id);if(!inp||S.busy)return;var t=inp.value.trim();if(!t)return;
+S.chat.push({role:'user',text:t});S.busy=true;S.chat.push({role:'assistant',text:'Thinking…'});S.d.keepFocus=id;render();scrollEnd();
+var idx=S.chat.length-1,turns=S.chat.slice(0,idx).map(function(x,i){return {role:x.role,content:i===0?'You are a friendly, concise assistant.\n\n'+x.text:x.text}});
+function setMsg(x){S.chat[idx].text=x;document.querySelectorAll('[data-live]').forEach(function(c){var n=c.querySelectorAll('.m');if(n.length){n[n.length-1].firstChild.textContent=x;if(c.classList.contains('ml'))c.scrollTop=c.scrollHeight}})}
+function done(){S.busy=false}
+(window.claude?window.claude.use('sample'):Promise.resolve(null)).then(function(sample){
+if(!sample){setMsg('Chat is not available in this view.');done();return}
+return sample(turns,{cache:false,onText:function(o){setMsg(o.text);scrollEnd()}}).then(function(r){setMsg(r.text);done();scrollEnd()})
+}).catch(function(e){var c=e&&e.code;setMsg(c==='not_granted'?'Chat needs your permission to use Claude.':c==='rate_limited'?'Too many messages, please wait a moment.':'Sorry, something went wrong. Please try again.');done()})}
+
+function act(a,v,id){
+if(a==='mode'){S.mode=v;S.err='';render()}
+else if(a==='auth'){var reg=S.mode==='register',em=val('ae').trim().toLowerCase(),pw=val('ap'),nm=reg?val('an').trim():'';S.d.ae=em;S.d.an=nm;
+if(reg){if(!nm)S.err='Enter your full name.';else if(em.indexOf('@')<1)S.err='Enter a valid email.';else if(pw.length<6)S.err='Password must be at least 6 characters.';else if(users.some(function(u){return u.email===em}))S.err='That email is already registered. Log in instead.';else S.err='';
+if(!S.err){users.push({name:nm,email:em,pw:hash(em+pw)});sv('pc-users',users);session=em;sv('pc-session',em);S.view='home';S.d={}}}
+else{var u=users.filter(function(x){return x.email===em&&x.pw===hash(em+pw)})[0];if(!u)S.err='Wrong email or password.';else{S.err='';session=em;sv('pc-session',em);S.view='home';S.d={}}}
+render()}
+else if(a==='menu'){S.menu=!S.menu;S.rmsg=null;render()}
+else if(a==='view'){S.view=v;S.menu=false;render()}
+else if(a==='logout'){session='';sv('pc-session','');S.menu=false;S.view='home';S.unlocked=false;S.chat=[];S.cid=null;S.fc=false;S.q='';S.f='all';S.mode='login';render()}
+else if(a==='redeem'){var c=val('rc').trim().toUpperCase(),mm=me(),us=usage[c]||[];S.rmsg=!c?{ok:false,t:'Enter a code.'}:CODES.indexOf(c)<0?{ok:false,t:'Invalid code.'}:us.indexOf(mm.email)>-1?{ok:false,t:'You already used this code.'}:us.length>=MAXU?{ok:false,t:'This code has reached its limit of '+MAXU+' users.'}:null;if(!S.rmsg){us.push(mm.email);usage[c]=us;sv('pc-usage',usage);mm.bal=(mm.bal||0)+AMT;sv('pc-users',users);S.rmsg={ok:true,t:'₱1,855.00 added to your balance. '+(MAXU-us.length)+' of '+MAXU+' uses left on this code.'}}render()}else if(a==='newchat'){if(S.busy)return;archive();S.chat=[];S.cid=null;S.view='home';S.menu=false;S.d.keepFocus='chat';render()}
+else if(a==='openchat'){if(S.busy)return;var hc=getHist().filter(function(x){return x.id===v})[0];if(!hc)return;archive();S.chat=hc.msgs.slice();S.cid=hc.id;S.view='home';S.menu=false;render()}
+else if(a==='gsend'){var gm=val('gchat').trim(),mm2=me();if(!gm||!hasPro(mm2))return;var g=ld('pc-group',[]);g.push({n:mm2.name,e:mm2.email,x:gm,t:Date.now()});sv('pc-group',g.slice(-200));S.d.keepFocus='gchat';render();if(/@system\b/i.test(gm))askSystem();else randomReply()}
+else if(a==='send'){sendChat('chat')}else if(a==='fsend'){sendChat('fchat')}else if(a==='fab'){S.fc=!S.fc;S.d.keepFocus=S.fc?'fchat':null;render()}else if(a==='flt'){S.f=v;render()}
+else if(a==='buy'){S.modal=v;S.err='';S.short=false;S.d={};render()}
+else if(a==='mclose'){S.modal=null;S.err='';S.short=false;render()}else if(a==='addbal'){S.modal=null;S.err='';S.short=false;S.menu=true;S.rmsg=null;render()}
+else if(a==='confirm'){var n=val('sn').trim(),e=val('se').trim();S.d.sn=n;S.d.se=e;
+if(!n||e.indexOf('@')<1){S.err='Enter a name and a valid email.';render();return}
+var price=S.modal==='Max'?5800:1850,mm=me(),bl=mm.bal||0;if(bl<price){S.err='Not enough balance. This plan costs '+bal2(price)+' and you have '+bal2(bl)+'.';S.short=true;render();return}
+mm.bal=bl-price;sv('pc-users',users);S.short=false;
+var cs='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',pt=function(){var o='';for(var i=0;i<4;i++)o+=cs[Math.floor(Math.random()*cs.length)];return o};
+var code=(S.modal==='Max'?'MAX':'PRO')+'-'+pt()+'-'+pt();
+subs.unshift({id:String(Date.now()),code:code,name:n,email:e,plan:S.modal,price:S.modal==='Max'?5800:1850,status:'Active',date:new Date().toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'})});sv('pc-subs',subs);
+S.modal=null;S.code=code;S.err='';S.d={};render()}
+else if(a==='tomgmt'){S.code=null;S.view='admin';S.unlocked=false;S.lockErr=false;S.d={};render()}
+else if(a==='unlock'){var c=val('lc').trim().toUpperCase();S.d.lc=c;var ok=!!c&&subs.some(function(s){return s.code===c});S.unlocked=ok;S.lockErr=!ok;render()}
+else if(a==='lock'){S.unlocked=false;S.d={};S.lockErr=false;render()}
+else if(a==='tog'){subs.forEach(function(s){if(s.id===v)s.status=s.status==='Active'?'Cancelled':'Active'});sv('pc-subs',subs);render()}
+else if(a==='del'){subs=subs.filter(function(s){return s.id!==v});sv('pc-subs',subs);render()}}
+
+document.addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;act(b.getAttribute('data-a'),b.getAttribute('data-v'))});
+document.addEventListener('keydown',function(e){if(e.key!=='Enter')return;var t=e.target;
+if(t.id==='chat'||t.id==='fchat'){e.preventDefault();sendChat(t.id)}else if(t.id==='ae'||t.id==='ap'||t.id==='an'){act('auth')}else if(t.id==='lc'){act('unlock')}else if(t.id==='rc'){act('redeem')}else if(t.id==='gchat'){e.preventDefault();act('gsend')}});
+document.addEventListener('input',function(e){if(e.target.id==='q'){S.q=e.target.value;var r=document.getElementById('rows');if(r)r.innerHTML=rowsHtml()}});
+window.addEventListener('storage',function(e){if(e.key==='pc-group'&&S.view==='group'&&me()){var g=document.getElementById('gmsgs');if(g){g.innerHTML=gHtml();g.scrollTop=g.scrollHeight}}});
+render();
+</script>
+</body>
+</html>
